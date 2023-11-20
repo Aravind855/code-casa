@@ -1,0 +1,34 @@
+import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+
+from google.colab import drive
+drive.mount('/content/drive')
+
+data = pd.read_csv('/content/drive/MyDrive/spam.csv')
+
+X = data['Message']
+y = data['Category']
+
+X_train, X_test, y_train, y_test = train_test_split(X_tfidf, y, test_size=0.2, random_state=42)
+
+clf = LogisticRegression()
+clf.fit(X_train, y_train)
+
+y_pred = clf.predict(X_test)
+
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Accuracy: {accuracy * 100:.2f}%")
+
+input_email = input("Enter the email text: ")
+
+input_tfidf = tfidf_vectorizer.transform([input_email])
+
+label = clf.predict(input_tfidf)
+
+if label[0] == 'spam':
+    print("This email is spam.")
+else:
+    print("This email is not spam.")
