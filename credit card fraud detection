@@ -1,0 +1,71 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from google.colab import drive
+drive.mount('/content/drive')
+
+  data = pd.read_csv("/content/drive/MyDrive/creditcard.csv")
+
+  X = data.drop(columns=['Class']) 
+y = data['Class']  
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+model = RandomForestClassifier(n_estimators=50, random_state=42)  
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+
+accuracy = accuracy_score(y_test, y_pred)
+precision = precision_score(y_test, y_pred)
+recall = recall_score(y_test, y_pred)
+f1 = f1_score(y_test, y_pred)
+
+print("Accuracy:", accuracy)
+print("Precision:", precision)
+print("Recall:", recall)
+print("F1 Score:", f1)
+
+conf_matrix = confusion_matrix(y_test, y_pred)
+plt.figure(figsize=(6, 6))
+sns.heatmap(conf_matrix, annot=True, fmt='d', cmap="Blues", cbar=False, linewidths=0.5)
+plt.xlabel('Predicted')
+plt.ylabel('Actual')
+plt.title('Confusion Matrix')
+plt.show()
+
+fraud_class = data['Class']
+fraudulent_count = fraud_class.value_counts()[1]
+non_fraudulent_count = fraud_class.value_counts()[0]
+
+
+plt.figure(figsize=(6, 6))
+labels = ['Non-Fraudulent', 'Fraudulent']
+counts = [non_fraudulent_count, fraudulent_count]
+plt.bar(labels, counts, color=['blue', 'red'])
+plt.xlabel('Transaction Class')
+plt.ylabel('Number of Transactions')
+plt.title('Number of Fraudulent and Non-Fraudulent Transactions')
+
+plt.show()
+
+# Step 7: Accept user input for a transaction
+user_input_amount = float(input("Enter the transaction amount: "))
+user_input_time = float(input("Enter the transaction time: "))
+user_input_features = [user_input_amount, user_input_time] + [0] * (X.shape[1] - 2)
+
+# Step 8: Use the trained model to predict fraud for the user input
+prediction = model.predict([user_input_features])
+
+if prediction[0] == 1:
+    print("This transaction is a FRAUDULENT.")
+else:
+    print("This transaction is a NON-FRAUDULENT.")
+
+
+
+                            
