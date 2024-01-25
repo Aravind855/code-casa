@@ -1,0 +1,34 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+data = pd.read_csv('/content/drive/MyDrive/terrosim.csv', encoding='latin1')
+
+print("\nMissing Values:")
+print(data.isnull().sum())
+
+plt.figure(figsize=(10, 6))
+sns.countplot(data=data, x='targtype1_txt', order=data['targtype1_txt'].value_counts().index)
+plt.xticks(rotation=90)
+plt.title("Distribution of Target Types")
+plt.show()
+
+plt.figure(figsize=(10, 6))
+sns.countplot(data=data, x='attacktype1_txt', order=data['attacktype1_txt'].value_counts().index)
+plt.xticks(rotation=90)
+plt.title("Distribution of Attack Types")
+plt.show()
+
+top_15_countries = data['country_txt'].value_counts().head(15).index
+
+plt.figure(figsize=(15, 6))
+sns.countplot(data=data, x='country_txt', order=top_15_countries)
+plt.xticks(rotation=90)
+plt.title("Top 15 Countries with the Most Incidents")
+plt.show()
+
+plt.figure(figsize=(10, 6))
+sns.countplot(data=data, x='region_txt', order=data['region_txt'].value_counts().index)
+plt.xticks(rotation=90)
+plt.title("Distribution of Regions")
+plt.show()
